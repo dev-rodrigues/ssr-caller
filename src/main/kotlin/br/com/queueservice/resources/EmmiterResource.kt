@@ -27,7 +27,8 @@ class EmmiterResource(
         return ResponseEntity.noContent().build()
     }
 
-    @PostMapping("/subscribe/{channel}/{client}/{type}")
+    // conecta um viewer a um canal
+    @GetMapping("/subscribe/{channel}/{client}/{type}")
     fun subscribe(
         @PathVariable(required = true) channel: String,
         @PathVariable(required = true) client: String,
@@ -46,12 +47,14 @@ class EmmiterResource(
         return emitter
     }
 
+    // adiciona um usuario a fila
     @PostMapping("/to-queue")
     fun toQueue(@RequestBody request: ToQueueRequest): ResponseEntity<ToQueueResponse> {
         val code = service.toQueue(request.channel, request.cpf)
         return ResponseEntity.ok(ToQueueResponse(code))
     }
 
+    // chama o proximo usuario da fila
     @GetMapping("/next/{channel}")
     fun getNext(@PathVariable(required = true) channel: String) {
         service.next(channel)
